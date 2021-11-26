@@ -53,14 +53,15 @@ class ProfileAdmin(admin.ModelAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (_('Personal info'), {'fields': ('first_name', 'last_name', 'email')}),
-        (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser',
+        (_('Permissions'), {'fields': ('perfil', 'is_active', 'is_staff', 'is_superuser',
                                        'groups')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
-        (_('Extended profile'), {'fields': ('organization', 'profile',
-                                            'position', 'voice', 'fax',
+        (_('Extended profile'), {'fields': ('instituicao', 'position',
+                                            'profile', 'voice',
                                             'delivery', 'city', 'area',
                                             'zipcode', 'country',
-                                            'keywords')}),
+                                            'datanascimento', 'acessolattes', 
+                                            'orcid')}),
     )
     add_fieldsets = (
         (None, {

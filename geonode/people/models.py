@@ -44,6 +44,8 @@ from geonode.security.permissions import PERMISSIONS, READ_ONLY_AFFECTED_PERMISS
 from allauth.account.signals import user_signed_up
 from allauth.socialaccount.signals import social_account_added
 
+from pronasolos.models import Instituicao, Unidade_Federacao, AreaInteresse
+
 from .utils import format_address
 from .signals import (
     do_login,
@@ -98,9 +100,16 @@ class Profile(AbstractUser):
         blank=True,
         null=True,
         help_text=_('city of the location'))
-    area = models.CharField(
-        _('Administrative Area'),
-        max_length=255,
+    # area = models.CharField(
+    #     _('Administrative Area'),
+    #     max_length=255,
+    #     blank=True,
+    #     null=True,
+    #     help_text=_('state, province of the location'))
+    area = models.ForeignKey(
+        Unidade_Federacao,
+        verbose_name=_('Estado'),
+        on_delete=models.PROTECT,
         blank=True,
         null=True,
         help_text=_('state, province of the location'))
@@ -133,6 +142,27 @@ class Profile(AbstractUser):
         choices=TIMEZONES,
         blank=True,
     )
+
+    # # CAMPOS PRONASOLOS #
+    ROLES = (('colaborador', 'Colaborador/Pesquisador'),
+            ('curadoria', 'Curadoria'),
+            ('administrador', 'Administrador Regional'),
+            ('comiteexecutivo', 'Comitê Executivo'),
+            ('comiteestrategico', 'Comitê Estratégico'),
+            ('superusuario', 'Super Usuário'))
+    
+    instituicao     = models.ForeignKey(Instituicao, on_delete=models.PROTECT, related_name='profile_inst', blank=True, null=True)
+    emailsecond     = models.EmailField(_('Email secundário'), max_length=200, null=True, blank=True)
+    formacao        = models.CharField(_('Formação'), max_length=100, blank=True, null=True )
+    areainterest    = models.ManyToManyField(AreaInteresse, related_name='ai_profile', blank=True, null=True)
+    datanascimento  = models.DateField(_('Data de Nascimento'), blank=True, null=True)
+    acessolattes    = models.URLField(_('Currículo Lattes'),max_length=300, blank=True, null=True,
+        help_text=_('Link de acesso ao currículo Lattes do pesquisador'))
+    orcid           = models.CharField(_('ORCID'),max_length=32, blank=True, null=True)
+    datahoraatualizacao = models.DateTimeField(auto_now=True, blank=True)
+    perfil          = models.CharField(_('Perfil do Usuário'), max_length=20, choices=ROLES, default=ROLES[0][0], null=True, blank=True)
+    # regional        = models.ForeignKey(Regiao, on_delete=PROTECT, blank=True, null=True)
+    # ######################
 
     def __init__(self, *args, **kwargs):
         super(Profile, self).__init__(*args, **kwargs)

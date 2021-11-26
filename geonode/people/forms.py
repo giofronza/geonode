@@ -74,10 +74,10 @@ class ForgotUsernameForm(forms.Form):
 
 
 class ProfileForm(forms.ModelForm):
-    keywords = taggit.forms.TagField(
-        label=_("Keywords"),
-        required=False,
-        help_text=_("A space or comma-separated list of keywords"))
+    # keywords = taggit.forms.TagField(
+    #     label=_("Keywords"),
+    #     required=False,
+    #     help_text=_("A space or comma-separated list of keywords"))
 
     class Meta:
         model = get_user_model()
@@ -87,9 +87,17 @@ class ProfileForm(forms.ModelForm):
             'last_login',
             'groups',
             'user_permissions',
-            'username',
+            # 'username',
             'is_staff',
             'is_superuser',
             'is_active',
-            'date_joined'
+            'date_joined',
+            'fax', 'delivery', 'zipcode', 'keywords', 'timezone', 'profile',
+            'country', 'language', 'organization', 'city',
+            'areainterest', 'emailsecond'
         )
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+        for visible in self.visible_fields():
+            visible.field.widget.attrs['class'] = 'form-control'

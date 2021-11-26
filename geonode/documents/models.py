@@ -42,6 +42,8 @@ from geonode.maps.signals import map_changed_signal
 from geonode.maps.models import Map
 from geonode.security.utils import remove_object_permissions
 
+from pronasolos.models import Projeto
+
 logger = logging.getLogger(__name__)
 
 
@@ -69,6 +71,11 @@ class Document(ResourceBase):
         help_text=_('The URL of the document if it is external.'),
         verbose_name=_('URL'))
 
+    ########### [PROBNASOLOS] #################
+    projeto = models.ForeignKey(Projeto, on_delete=models.CASCADE, related_name='docproj', null=True, blank=True)
+
+    ###########################################
+    
     def __str__(self):
         return str(self.title)
 

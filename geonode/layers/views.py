@@ -107,6 +107,8 @@ from geonode.tasks.tasks import set_permissions
 
 from celery.utils.log import get_logger
 
+from pronasolos.models import Projeto
+
 if check_ogc_backend(geoserver.BACKEND_PACKAGE):
     from geonode.geoserver.helpers import gs_catalog
 
@@ -196,11 +198,17 @@ def _resolve_layer(request, alternate, permission='base.view_resourcebase',
 
 
 def layer_upload_handle_get(request, template):
+    
+    ############# [PRONASOLOS] ################
+    proj = request.session.get('proj', None)
+    ###########################################
+    
     mosaics = Layer.objects.filter(is_mosaic=True).order_by('name')
     ctx = {
         'mosaics': mosaics,
         'charsets': CHARSETS,
         'is_layer': True,
+        'proj': proj,
     }
     if 'geonode.upload' in settings.INSTALLED_APPS and \
             settings.UPLOADER['BACKEND'] == 'geonode.importer':
@@ -218,6 +226,10 @@ def layer_upload_metadata(request):
     form = NewLayerUploadForm(request.POST, request.FILES)
 
     if form.is_valid():
+        
+        ############# [PRONASOLOS] ##################
+        proj = request.session.get('proj', None)
+        #############################################
 
         tempdir = tempfile.mkdtemp(dir=settings.STATIC_ROOT)
 

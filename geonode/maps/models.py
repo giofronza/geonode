@@ -49,6 +49,8 @@ from geonode.utils import check_ogc_backend
 from deprecated import deprecated
 from pinax.ratings.models import OverallRating
 
+from pronasolos.models import Projeto
+
 logger = logging.getLogger("geonode.maps.models")
 
 
@@ -88,6 +90,11 @@ class Map(ResourceBase, GXPMapBase):
         max_length=255,
         blank=True)
     # Full URL for featured map view, ie http://domain/someview
+
+    #### [PRONASOLOS] ####
+    projeto = models.ForeignKey(Projeto, on_delete=models.CASCADE, related_name='mapproj', null=True, blank=True)
+
+    #################################################
 
     def __str__(self):
         return f'{self.title} by {(self.owner.username if self.owner else "<Anonymous>")}'

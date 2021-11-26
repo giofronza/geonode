@@ -198,6 +198,12 @@ class DocumentUploadView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(DocumentUploadView, self).get_context_data(**kwargs)
+
+        ############# [PRONASOLOS] ################
+        proj = self.request.session.get('proj', None)
+        context['proj'] = proj 
+        ###########################################
+
         context['ALLOWED_DOC_TYPES'] = ALLOWED_DOC_TYPES
         return context
 
@@ -224,6 +230,11 @@ class DocumentUploadView(CreateView):
         self.object = form.save(commit=False)
         self.object.owner = self.request.user
 
+        ############# [PRONASOLOS] ################
+        proj = self.request.session.get('proj', None)
+        self.object.projeto = proj
+        ####################
+        
         if settings.ADMIN_MODERATE_UPLOADS:
             self.object.is_approved = False
         if settings.RESOURCE_PUBLISHING:
