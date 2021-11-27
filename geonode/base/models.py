@@ -93,6 +93,8 @@ from pyproj import transform, Proj
 from urllib.parse import urlparse, urlsplit, urljoin
 from imagekit.cachefiles.backends import Simple
 
+# from pronasolos.models import Projeto
+
 logger = logging.getLogger(__name__)
 
 
@@ -962,6 +964,15 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
     __is_published = False
 
     objects = ResourceBaseManager()
+
+    # ###### [PRONASOLOS] ###################
+    # # Relacionamento do recurso com Projeto
+    # project_rel = models.ForeignKey(
+    #     Projeto,
+    #     related_name='base_projeto',
+    #     blank=True,
+    #     null=True)
+    # #######################################
 
     class Meta:
         # custom permissions,
