@@ -171,9 +171,8 @@ class Profile(AbstractUser):
     #     blank=True, null=True)
     # userinteresse = models.ManyToManyField(
     #     AreaInteresse, 
-    #     related_name='ai_profile', 
-    #     verbose_name=_('Região'),
-    #     on_delete=models.DO_NOTHING,
+    #     related_name='profile_areainteresse', 
+    #     verbose_name=_('Temáticas de Interesse'),
     #     blank=True, null=True)
     # datanascimento = models.DateField(
     #     _('Data de Nascimento'),
