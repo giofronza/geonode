@@ -189,7 +189,7 @@ class Profile(AbstractUser):
     #     help_text=_('Open Researcher and Contributor ID'))
     # datahoraatualizacao = models.DateTimeField(
     #     auto_now=True,
-    #     blank=True)
+    #     blank=True, null=True)
     # perfil = models.CharField(
     #     _('Perfil do Usuário'), 
     #     max_length=20, 
