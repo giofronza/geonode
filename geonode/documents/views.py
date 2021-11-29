@@ -199,10 +199,10 @@ class DocumentUploadView(CreateView):
     def get_context_data(self, **kwargs):
         context = super(DocumentUploadView, self).get_context_data(**kwargs)
 
-        # ############# [PRONASOLOS] ################
-        # proj = self.request.session.get('proj', None)
-        # context['proj'] = proj 
-        # ###########################################
+        ############# [PRONASOLOS] ################
+        proj = self.request.session.get('proj', None)
+        context['proj'] = proj 
+        ###########################################
 
         context['ALLOWED_DOC_TYPES'] = ALLOWED_DOC_TYPES
         return context
@@ -231,8 +231,8 @@ class DocumentUploadView(CreateView):
         self.object.owner = self.request.user
 
         # ############# [PRONASOLOS] ################
-        # proj = self.request.session.get('proj', None)
-        # self.object.projeto = proj
+        proj = self.request.session.get('proj', None)
+        self.object.projeto = proj
         # ###########################################
         
         if settings.ADMIN_MODERATE_UPLOADS:
@@ -280,7 +280,8 @@ class DocumentUploadView(CreateView):
             bbox = BBOXHelper.from_xy(bbox)
             self.object.bbox_polygon = bbox.as_polygon()
 
-        self.object.save(notify=True)
+        ##### PRONASOLOS ########### argumento projeto
+        self.object.save(notify=True, projeto=proj)
         register_event(self.request, EventType.EVENT_UPLOAD, self.object)
 
         if self.request.GET.get('no__redirect', False):

@@ -57,9 +57,8 @@ class ProfileAdmin(admin.ModelAdmin):
                                        'groups')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
         (_('Extended profile'), {'fields': ('instituicao', 'position',
-                                            'profile', 'voice',
-                                            'delivery', 'city', 'area',
-                                            'zipcode', 'country',
+                                            'voice',
+                                            'useruf', 'userregiao',
                                             'datanascimento', 'acessolattes', 
                                             'orcid')}),
     )
@@ -78,7 +77,7 @@ class ProfileAdmin(admin.ModelAdmin):
         'is_staff', 'is_active')
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'groups')
     search_fields = (
-        'username', 'organization', 'profile',
+        'username', 'instituicao', 'perfil',
         'first_name', 'last_name', 'email')
     # readonly_fields = ("groups", )
     ordering = ('username',)

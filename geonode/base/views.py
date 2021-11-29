@@ -149,6 +149,13 @@ def batch_modify(request, model):
     if request.method == 'POST':
         form = BatchEditForm(request.POST)
         if form.is_valid():
+            
+            ########### [PRONASOLOS] ####################
+            """ Gravar projeto relacionado so recurso """
+            proj = request.session.get('proj', None)
+            form.project_rel = proj
+            #############################################
+            
             keywords = [keyword.strip() for keyword in
                         form.cleaned_data.pop("keywords").split(',') if keyword]
             regions = form.cleaned_data.pop("regions")

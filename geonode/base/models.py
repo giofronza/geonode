@@ -93,7 +93,7 @@ from pyproj import transform, Proj
 from urllib.parse import urlparse, urlsplit, urljoin
 from imagekit.cachefiles.backends import Simple
 
-# from pronasolos.models import Projeto
+from pronasolos.models import Projeto
 
 logger = logging.getLogger(__name__)
 
@@ -965,14 +965,15 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
 
     objects = ResourceBaseManager()
 
-    # ###### [PRONASOLOS] ###################
-    # # Relacionamento do recurso com Projeto
-    # project_rel = models.ForeignKey(
-    #     Projeto,
-    #     related_name='base_projeto',
-    #     blank=True,
-    #     null=True)
-    # #######################################
+    ###### [PRONASOLOS] ###################
+    """ Relacionamento do recurso com Projeto """
+    project_rel = models.ForeignKey(
+        Projeto,
+        related_name='base_projeto',
+        verbose_name=_('Projeto relacionado'),
+        on_delete=models.DO_NOTHING,
+        blank=True, null=True)
+    #######################################
 
     class Meta:
         # custom permissions,
@@ -1033,13 +1034,18 @@ class ResourceBase(PolymorphicModel, PermissionLevelMixin, ItemBase):
             self.title = self.title.replace(",", "_")
         return super().clean()
 
-    def save(self, notify=False, *args, **kwargs):
+    def save(self, notify=False, projeto=None, *args, **kwargs):
         """
         Send a notification when a resource is created or updated
         """
+        
         if not self.resource_type and self.polymorphic_ctype and \
                 self.polymorphic_ctype.model:
             self.resource_type = self.polymorphic_ctype.model.lower()
+            ######### PRONASOLOS #############
+            print('======= SAVE =======')
+            self.project_rel = projeto
+            print('PROJETO: %s' % self.project_rel)
 
         if hasattr(self, 'class_name') and (self.pk is None or notify):
             if self.pk is None and self.title:

@@ -50,6 +50,9 @@ from geonode.groups.models import (
 from geonode.base.utils import build_absolute_uri
 from geonode.security.utils import get_resources_with_perms
 
+##### PRONASOLOS ########
+from pronasolos.models import Projeto
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -243,6 +246,14 @@ class ContactRoleField(DynamicComputedField):
     def to_representation(self, value):
         return UserSerializer(embed=True, many=False).to_representation(value)
 
+##### PRONASLOS ###########
+class ProjetoSerializer(DynamicModelSerializer):
+
+    class Meta:
+        model = Projeto
+        name = 'Projeto'
+        fields = ('nome',)
+
 
 class ResourceBaseSerializer(BaseDynamicModelSerializer):
 
@@ -254,6 +265,9 @@ class ResourceBaseSerializer(BaseDynamicModelSerializer):
         self.fields['uuid'] = serializers.CharField(read_only=True)
         self.fields['resource_type'] = serializers.CharField(read_only=True)
         self.fields['polymorphic_ctype_id'] = serializers.CharField(read_only=True)
+        #### PRONASOLOS ####
+        self.fields['project_rel'] = DynamicRelationField(
+            ProjetoSerializer, embed=True, many=False)
         self.fields['owner'] = DynamicRelationField(UserSerializer, embed=True, many=False, read_only=True)
         self.fields['poc'] = ContactRoleField('poc', read_only=True)
         self.fields['metadata_author'] = ContactRoleField('metadata_author', read_only=True)
@@ -315,6 +329,8 @@ class ResourceBaseSerializer(BaseDynamicModelSerializer):
         view_name = 'base-resources-list'
         fields = (
             'pk', 'uuid', 'resource_type', 'polymorphic_ctype_id', 'perms',
+            ### PRONASOLOS ###
+            'project_rel',
             'owner', 'poc', 'metadata_author',
             'keywords', 'regions', 'category',
             'title', 'abstract', 'attribution', 'doi', 'alternate', 'bbox_polygon', 'll_bbox_polygon', 'srid',

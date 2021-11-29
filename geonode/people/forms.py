@@ -87,14 +87,14 @@ class ProfileForm(forms.ModelForm):
             'last_login',
             'groups',
             'user_permissions',
-            # 'username',
+            'username',
             'is_staff',
             'is_superuser',
             'is_active',
             'date_joined',
             'fax', 'delivery', 'zipcode', 'keywords', 'timezone', 'profile',
             'country', 'language', 'organization', 'city',
-            'areainterest', 'emailsecond'
+            'areainteresse', 'emailsecond'
         )
 
     def __init__(self, *args, **kwargs):

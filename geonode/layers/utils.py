@@ -719,6 +719,8 @@ def file_upload(filename,
             raise
     try:
         with transaction.atomic():
+            ##### PRONASOLOS #######
+            print('===== Upload Layer ===')
             layer.save(notify=True)
     except IntegrityError:
         raise

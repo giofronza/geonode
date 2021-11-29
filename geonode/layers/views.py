@@ -200,7 +200,7 @@ def _resolve_layer(request, alternate, permission='base.view_resourcebase',
 def layer_upload_handle_get(request, template):
     
     ############# [PRONASOLOS] ################
-    # proj = request.session.get('proj', None)
+    proj = request.session.get('proj', None)
     ###########################################
     
     mosaics = Layer.objects.filter(is_mosaic=True).order_by('name')
@@ -208,7 +208,7 @@ def layer_upload_handle_get(request, template):
         'mosaics': mosaics,
         'charsets': CHARSETS,
         'is_layer': True,
-        # 'proj': proj,
+        'proj': proj,
     }
     if 'geonode.upload' in settings.INSTALLED_APPS and \
             settings.UPLOADER['BACKEND'] == 'geonode.importer':
@@ -1123,6 +1123,8 @@ def layer_metadata(
             tb = traceback.format_exc()
             logger.error(tb)
 
+        ##### PRONASOLOS #######
+        print('==== LAYER METADATA =====')
         layer.save(notify=True)
         return HttpResponse(json.dumps({'message': message}))
 

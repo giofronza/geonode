@@ -51,6 +51,8 @@ from geonode.layers.models import Layer
 from django.utils.translation import get_language
 from .fields import MultiThesauriField
 
+from pronasolos.models import Projeto
+
 logger = logging.getLogger(__name__)
 
 
@@ -477,6 +479,15 @@ class ResourceBaseForm(TranslationModelForm):
         widget=RegionsSelect)
 
     regions.widget.attrs = {"size": 20}
+
+    ######## PRONASOLOS #############
+    project_rel = forms.ModelChoiceField(
+        empty_label=_("Projeto"),
+        label=_("Projeto"),
+        required=True,
+        queryset=Projeto.objects.all(),
+        widget=TinyMCE()
+        )
 
     def __init__(self, *args, **kwargs):
         super(ResourceBaseForm, self).__init__(*args, **kwargs)
