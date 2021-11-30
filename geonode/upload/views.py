@@ -170,10 +170,13 @@ def save_step_view(req, session):
             }
         )
     form = LayerUploadForm(req.POST, req.FILES)
+    proj = req.session.get('proj', None)
 
     overwrite = req.path_info.endswith('/replace')
     target_store = None
     if form.is_valid():
+        print('estou aqui 1')
+        print(proj)
         tempdir = tempfile.mkdtemp(dir=settings.STATIC_ROOT)
         logger.debug(f"valid_extensions: {form.cleaned_data['valid_extensions']}")
         relevant_files = _select_relevant_files(
@@ -184,8 +187,8 @@ def save_step_view(req, session):
         _write_uploaded_files_to_disk(tempdir, relevant_files)
         base_file = os.path.join(tempdir, form.cleaned_data["base_file"].name)
         name, ext = os.path.splitext(os.path.basename(base_file))
-        logger.debug(f'Name: {name}, ext: {ext}')
-        logger.debug(f"base_file: {base_file}")
+        #logger.debug(f'Name: {name}, ext: {ext}')
+        #logger.debug(f"base_file: {base_file}")
         scan_hint = get_scan_hint(form.cleaned_data["valid_extensions"])
         spatial_files = scan_file(
             base_file,
@@ -215,7 +218,7 @@ def save_step_view(req, session):
             time_presentation_default_value=form.cleaned_data['time_presentation_default_value'],
             time_presentation_reference_value=form.cleaned_data['time_presentation_reference_value'],
             charset_encoding=form.cleaned_data["charset"],
-            target_store=target_store
+            target_store=target_store,
         )
         import_session.tasks[0].set_charset(form.cleaned_data["charset"])
         sld = None
@@ -248,7 +251,8 @@ def save_step_view(req, session):
             append_to_mosaic_name=form.cleaned_data['append_to_mosaic_name'],
             mosaic_time_regex=form.cleaned_data['mosaic_time_regex'],
             mosaic_time_value=form.cleaned_data['mosaic_time_value'],
-            user=upload.user
+            user=upload.user,
+            projeto=proj
         )
         Upload.objects.update_from_session(upload_session)
         return next_step_response(req, upload_session, force_ajax=True)

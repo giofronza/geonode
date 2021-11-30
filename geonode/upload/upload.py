@@ -145,6 +145,9 @@ class UploaderSession(object):
     # the user who started this upload session
     user = None
 
+    # o id do projeto
+    projeto = None
+
     def __init__(self, **kw):
         for k, v in kw.items():
             if hasattr(self, k):

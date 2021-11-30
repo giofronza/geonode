@@ -35,6 +35,7 @@ from django.core.files.storage import FileSystemStorage
 
 from geonode.layers.models import Layer
 from geonode.geoserver.helpers import gs_uploader, ogc_server_settings
+from pronasolos.models import Projeto
 
 logger = logging.getLogger(__name__)
 
@@ -98,6 +99,15 @@ class Upload(models.Model):
     mosaic_elev_value = models.CharField(max_length=128, null=True)
 
     resume_url = models.CharField(max_length=256, null=True, blank=True)
+  # ###### [PRONASOLOS] ###################
+    # Relacionamento do recurso com Projeto
+    projeto = models.ForeignKey(
+        Projeto,
+        related_name='id_do_projeto_upload',
+        blank=True,
+        on_delete=models.CASCADE,
+        null=True)
+    # #######################################
 
     class Meta:
         ordering = ['-date']
@@ -122,6 +132,7 @@ class Upload(models.Model):
         self.name = upload_session.name
         self.user = upload_session.user
         self.date = now()
+        self.projeto =upload_session.projeto
 
         if not self.upload_dir:
             self.upload_dir = os.path.dirname(upload_session.base_file)
@@ -267,10 +278,15 @@ class Upload(models.Model):
                 logger.warning(e)
 
     def set_processing_state(self, state):
+
         if self.state != state:
             self.state = state
             Upload.objects.filter(id=self.id).update(state=state)
         if self.layer:
+            #*********************pronasolos*********************
+            self.layer.projeto = self.projeto
+            self.layer.save()
+            
             if self.state == Upload.STATE_PROCESSED:
                 self.layer.clear_dirty_state()
             else:
