@@ -1123,8 +1123,6 @@ def layer_metadata(
             tb = traceback.format_exc()
             logger.error(tb)
 
-        ##### PRONASOLOS #######
-        print('==== LAYER METADATA =====')
         layer.save(notify=True)
         return HttpResponse(json.dumps({'message': message}))
 

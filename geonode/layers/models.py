@@ -45,7 +45,7 @@ from geonode.notifications_helper import (
 from ..services.enumerations import CASCADED
 from ..services.enumerations import INDEXED
 
-# from pronasolos.models import Projeto
+from pronasolos.models import Projeto
 
 logger = logging.getLogger("geonode.layers.models")
 
@@ -208,13 +208,13 @@ class Layer(ResourceBase):
         blank=True,
         null=True)
 
-    # ########## [PRONASOLOS] ##########
-    # projeto = models.ForeignKey(
-    #     Projeto, 
-    #     on_delete=models.CASCADE, 
-    #     related_name='layer_projeto', 
-    #     null=True, blank=True)
-    # ###################################
+    ########## [PRONASOLOS] ##########
+    projeto = models.ForeignKey(
+        Projeto, 
+        on_delete=models.CASCADE, 
+        related_name='layer_projeto', 
+        null=True, blank=True)
+    ###################################
     
     def is_vector(self):
         return self.storeType == 'dataStore'
